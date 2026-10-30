@@ -1,0 +1,466 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EduShare - Educational Posts</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f5f7fb;
+    color: #222;
+}
+
+header {
+    background: #172554;
+    color: white;
+    padding: 20px 8%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.logo span {
+    color: #38bdf8;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin-left: 25px;
+}
+
+.hero {
+    text-align: center;
+    padding: 100px 20px;
+    background: linear-gradient(135deg, #172554, #2563eb);
+    color: white;
+}
+
+.hero h1 {
+    font-size: 42px;
+    margin-bottom: 20px;
+}
+
+.hero p {
+    font-size: 18px;
+    margin-bottom: 30px;
+}
+
+.hero-btn {
+    display: inline-block;
+    background: #38bdf8;
+    color: #172554;
+    padding: 13px 25px;
+    text-decoration: none;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.categories, .posts-section, .publish-section {
+    padding: 55px 8%;
+    text-align: center;
+}
+
+h2 {
+    margin-bottom: 25px;
+    color: #172554;
+}
+
+.category-list {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.category-list button {
+    padding: 12px 22px;
+    border: none;
+    background: #dbeafe;
+    color: #1e40af;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.category-list button:hover {
+    background: #2563eb;
+    color: white;
+}
+
+#searchInput {
+    width: 80%;
+    max-width: 500px;
+    padding: 14px;
+    margin-bottom: 30px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+}
+
+.posts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 25px;
+    text-align: left;
+}
+
+.post-card {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+}
+
+.post-card h3 {
+    color: #1e3a8a;
+    margin: 12px 0;
+}
+
+.post-card p {
+    line-height: 1.6;
+    color: #555;
+}
+
+.tag {
+    color: #2563eb;
+    font-size: 13px;
+    font-weight: bold;
+}
+
+.post-card button {
+    margin-top: 15px;
+    padding: 9px 15px;
+    border: none;
+    background: #2563eb;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.post-card .delete-btn {
+    background: #dc2626;
+    margin-left: 5px;
+}
+
+form {
+    max-width: 600px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+form input, form select, form textarea {
+    padding: 14px;
+    border: 1px solid #ccc;
+    border-radius: 7px;
+    font-size: 15px;
+}
+
+form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+form button {
+    padding: 14px;
+    background: #172554;
+    color: white;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+}
+
+footer {
+    background: #172554;
+    color: white;
+    text-align: center;
+    padding: 22px;
+}
+
+@media(max-width: 600px) {
+    header {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    nav a {
+        margin: 8px;
+        font-size: 14px;
+    }
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+    #searchInput {
+        width: 100%;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <div class="logo">Edu<span>Share</span></div>
+
+    <nav>
+        <a href="#home">Home</a>
+        <a href="#posts">Explore Posts</a>
+        <a href="#publish">Publish</a>
+    </nav>
+</header>
+
+<section class="hero" id="home">
+    <h1>Learn Something New Every Day</h1>
+    <p>Discover knowledge, share ideas and grow together.</p>
+    <a href="#posts" class="hero-btn">Explore Posts</a>
+</section>
+
+<section class="categories">
+    <h2>Explore Categories</h2>
+
+    <div class="category-list">
+        <button onclick="filterPosts('All')">All</button>
+        <button onclick="filterPosts('Technology')">Technology</button>
+        <button onclick="filterPosts('Science')">Science</button>
+        <button onclick="filterPosts('Programming')">Programming</button>
+        <button onclick="filterPosts('Mathematics')">Mathematics</button>
+    </div>
+</section>
+
+<section class="posts-section" id="posts">
+
+    <h2>Latest Educational Posts</h2>
+
+    <input
+        type="text"
+        id="searchInput"
+        placeholder="Search educational posts..."
+        oninput="searchPosts()"
+    >
+
+    <div class="posts-container" id="postsContainer"></div>
+
+</section>
+
+<section class="publish-section" id="publish">
+
+    <h2>Publish an Educational Post</h2>
+
+    <form id="postForm">
+
+        <input
+            type="text"
+            id="postTitle"
+            placeholder="Enter post title"
+            required
+        >
+
+        <select id="postCategory" required>
+            <option value="">Select Category</option>
+            <option>Technology</option>
+            <option>Science</option>
+            <option>Programming</option>
+            <option>Mathematics</option>
+        </select>
+
+        <textarea
+            id="postContent"
+            placeholder="Write your educational content..."
+            required
+        ></textarea>
+
+        <button type="submit">Publish Post</button>
+
+    </form>
+
+</section>
+
+<footer>
+    <p>© 2026 EduShare | Learn. Share. Grow.</p>
+</footer>
+
+<script>
+
+const defaultPosts = [
+    {
+        id: 1,
+        title: "Introduction to Artificial Intelligence",
+        category: "Technology",
+        content: "Artificial Intelligence (AI) is a branch of computer science that focuses on developing machines capable of performing tasks that normally require human intelligence."
+    },
+    {
+        id: 2,
+        title: "Understanding the Solar System",
+        category: "Science",
+        content: "The solar system consists of the Sun and all celestial objects that orbit around it, including planets, moons, asteroids and comets."
+    },
+    {
+        id: 3,
+        title: "Introduction to Python Programming",
+        category: "Programming",
+        content: "Python is a popular high-level programming language known for its simple syntax, readability and wide range of applications."
+    },
+    {
+        id: 4,
+        title: "Basics of Mathematics",
+        category: "Mathematics",
+        content: "Mathematics is the study of numbers, quantities, structures and patterns. It plays an important role in science and everyday life."
+    }
+];
+
+let posts = JSON.parse(localStorage.getItem("eduPosts")) || defaultPosts;
+
+let currentCategory = "All";
+
+function savePosts() {
+    localStorage.setItem("eduPosts", JSON.stringify(posts));
+}
+
+function displayPosts() {
+
+    const container = document.getElementById("postsContainer");
+
+    container.innerHTML = "";
+
+    const search = document.getElementById("searchInput")
+        .value.toLowerCase();
+
+    const filtered = posts.filter(post => {
+
+        const matchesCategory =
+            currentCategory === "All" ||
+            post.category === currentCategory;
+
+        const matchesSearch =
+            post.title.toLowerCase().includes(search) ||
+            post.content.toLowerCase().includes(search);
+
+        return matchesCategory && matchesSearch;
+    });
+
+    if (filtered.length === 0) {
+        container.innerHTML = "<p>No educational posts found.</p>";
+        return;
+    }
+
+    filtered.forEach(post => {
+
+        const card = document.createElement("div");
+        card.className = "post-card";
+
+        const title = document.createElement("h3");
+        title.textContent = post.title;
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = post.category;
+
+        const description = document.createElement("p");
+
+        description.textContent =
+            post.content.length > 100
+                ? post.content.substring(0, 100) + "..."
+                : post.content;
+
+        const readButton = document.createElement("button");
+        readButton.textContent = "Read More";
+
+        readButton.onclick = () => {
+            alert(post.title + "\n\n" + post.content);
+        };
+
+        card.append(tag, title, description, readButton);
+
+        if (post.id > 4) {
+
+            const deleteButton = document.createElement("button");
+
+            deleteButton.textContent = "Delete";
+            deleteButton.className = "delete-btn";
+
+            deleteButton.onclick = () => deletePost(post.id);
+
+            card.append(deleteButton);
+        }
+
+        container.appendChild(card);
+
+    });
+}
+
+function filterPosts(category) {
+    currentCategory = category;
+    displayPosts();
+}
+
+function searchPosts() {
+    displayPosts();
+}
+
+function deletePost(id) {
+
+    if (confirm("Are you sure you want to delete this post?")) {
+
+        posts = posts.filter(post => post.id !== id);
+
+        savePosts();
+
+        displayPosts();
+    }
+}
+
+document.getElementById("postForm")
+.addEventListener("submit", function(event) {
+
+    event.preventDefault();
+
+    const newPost = {
+
+        id: Date.now(),
+
+        title: document.getElementById("postTitle")
+            .value.trim(),
+
+        category: document.getElementById("postCategory")
+            .value,
+
+        content: document.getElementById("postContent")
+            .value.trim()
+    };
+
+    if (!newPost.title || !newPost.content) return;
+
+    posts.unshift(newPost);
+
+    savePosts();
+
+    displayPosts();
+
+    this.reset();
+
+    alert("Educational post published successfully!");
+
+});
+
+displayPosts();
+
+</script>
+
+</body>
+</html>
